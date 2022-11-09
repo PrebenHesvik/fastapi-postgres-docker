@@ -12,4 +12,4 @@ class Todo(Base):
     todo_id = Column(Integer, primary_key=True, nullable=False)
     todo_name = Column(String, nullable=False)
     level_of_importance = Column(String, nullable=False)
-    date_ceated = Column(DATE(), nullable=False, server_default=func.now())
+    date_created = Column(DATE(), nullable=False, server_default=func.now())
