@@ -9,10 +9,10 @@ LEVEL_OF_IMPORTANCE = (
 
 
 def validate_level_of_importance(cls, value: dict) -> dict:
-    level = value.get("level")
+    level = value.get("level_of_importance")
     if level not in LEVEL_OF_IMPORTANCE:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"{level} is not a valid region.",
+            detail=f"{level} is not a valid level of importance.",
         )
     return value
