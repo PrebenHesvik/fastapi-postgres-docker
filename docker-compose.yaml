@@ -4,7 +4,7 @@ services:
   db:
     image: "postgres:14.1-alpine"
     environment:
-      - POSTGRES_HOST=fastapi-postgres-db-1
+      - POSTGRES_HOST=fastapi-postgres-docker_db_1 
       - POSTGRES_DB=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=secret
@@ -13,9 +13,9 @@ services:
     volumes:
       - db:/var/lib/postgresql/data
       - ./db/init.sql:/docker-entrypoint-initdb.d/init.sql
-    #env_file:
-    #  - .env
     restart: always
+    networks:
+      - fastapi-postgres
     
   backend:
     build:
@@ -25,22 +25,18 @@ services:
       - "8000:8000"
     volumes:
       - .:/app/
-    #environment:
-    #  - POSTGRES_HOST=DATABASE_HOSTNAME
-    #  - POSTGRES_DB=DATABASE_NAME
-    #  - POSTGRES_USER=DATABASE_USERNAME
-    #  - POSTGRES_PASSWORD=DATABASE_PASSWORD
-    #env_file:
-    #  - .env
     depends_on:
       - db
     restart: always
+    networks:
+      - fastapi-postgres
 
   
-
-
 volumes:
   db:
     driver: local
 
 
+networks:
+  fastapi-postgres:
+    external: true
