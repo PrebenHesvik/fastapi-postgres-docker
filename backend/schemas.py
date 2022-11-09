@@ -18,3 +18,6 @@ class TodoResponse(BaseModel):
     todo_name: str
     level_of_importance: str
     date_created: date
+    
+    class Config:
+        orm_mode = True
