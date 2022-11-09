@@ -16,7 +16,7 @@ def get_todos(
     return db.query(Todo).order_by(Todo.level_of_importance).all()
 
 
-@router.post("/", status_code=status.HTTP_201_CREATED, response_model=TodoCreate)
+@router.post("/", status_code=status.HTTP_201_CREATED, response_model=TodoResponse)
 def create_todo(todo: TodoCreate, db: Session = Depends(get_db)):
     new_todo = Todo(**todo.dict())
     with CommitData(db, new_todo):
