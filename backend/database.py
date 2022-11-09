@@ -14,9 +14,6 @@ hostname = settings.database_hostname
 SQLALCHEMY_DATABASE_URL = (
     f"postgresql://{username}:{password}@{hostname}/{database_name}"
 )
-print("------------------------------------")
-print(SQLALCHEMY_DATABASE_URL)
-print("------------------------------------")
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
