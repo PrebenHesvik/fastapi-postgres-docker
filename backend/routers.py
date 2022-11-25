@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
 
-from .database import get_db
+
 from .database_strategies import CommitData, DeleteData, UpdataData
 from .schemas import TodoCreate, TodoResponse
 from .models import Todo

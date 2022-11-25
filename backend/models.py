@@ -1,15 +1,53 @@
-"""SQLAlchemy database models"""
-from sqlalchemy import DATE, Boolean, Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
-from sqlalchemy.sql import func
-from sqlalchemy.sql.expression import text
+"""Beanie database models"""
 
-from .database import Base
+from datetime import datetime
+from beanie import Document, PydanticObjectId
+from pydantic import Field
+from bson.objectid import ObjectId
+from enum import Enum
+from pydantic import BaseModel
+from datetime import date
 
 
-class Todo(Base):
-    __tablename__ = "todo"
-    todo_id = Column(Integer, primary_key=True, nullable=False)
-    todo_name = Column(String, nullable=False)
-    level_of_importance = Column(String, nullable=False)
-    date_created = Column(DATE(), nullable=False, server_default=func.now())
+class TodoState(Enum):
+    TODO = "todo"
+    IN_PROGRESS = "in_progress"
+    DONE = "done"
+
+
+class LevelOfImportance(Enum):
+    LOW = "low"
+    MEDIUM = "medium"
+    HIGH = "high"
+    CRITICAL = "critical"
+
+
+class TodoList(Document):
+    name: str
+    description: str | None = None
+    createdDate: datetime
+    updatedDate: date | None = None
+
+
+class CreateUpdateTodoList(BaseModel):
+    name: str
+    description: str | None = None
+
+
+class TodoItem(Document):
+    listID: PydanticObjectId
+    name: str
+    description: str | None = Field(max_length=400)
+    state: TodoState
+    level_of_importance: LevelOfImportance
+    date_created: date
+
+
+class CreateUpdateTodoItem(BaseModel):
+    name: str
+    description: str | None = None
+    state: TodoState
+    level_of_importance: LevelOfImportance
+
+
+__beanie_models__ = [TodoList, TodoItem]
