@@ -1,7 +1,6 @@
-import beanie
-import motor
-import motor.motor_asyncio
-from .models import TodoList, TodoItem
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
 from .config import settings
 
@@ -12,9 +11,22 @@ port = settings.database_port
 hostname = settings.database_hostname
 
 
-async def init_db():
-    client = motor.motor_asyncio.AsyncIOMotorClient("mongodb://localhost:27017")
+SQLALCHEMY_DATABASE_URL = (
+    f"postgresql://{username}:{password}@{hostname}/{database_name}"
+)
 
-    await beanie.init_beanie(
-        database=client.db_name, document_models=[TodoList, TodoItem]  # type: ignore
-    )
+engine = create_engine(SQLALCHEMY_DATABASE_URL)
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+Base = declarative_base()
+
+
+def get_db():
+    """
+    Dependency
+    Imported by the router files
+    """
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
